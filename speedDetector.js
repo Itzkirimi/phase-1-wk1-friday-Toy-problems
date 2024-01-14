@@ -1,23 +1,24 @@
- speedDetector.js
+// This function calculates demerit points based on the car speed.
+
 function calculateDemeritPoints(speed) {
-    const speedLimit = 70;
-    const demeritPointsPer5KmAboveLimit = 1;
-  
-    if (speed < speedLimit) {
-      console.log('Ok');
-      return 0;
-    } else {
-      const demeritPoints = Math.floor((speed - speedLimit) / 5);
-      console.log(`Points: ${demeritPoints}`);
-      
-      if (demeritPoints >= 12) {
-        console.log('License suspended');
-      }
-  
-      return demeritPoints;
+  const speedLimit = 70;
+  const kmPerDemerit = 5;
+
+  // Check if the speed is less than or equal to the speed limit
+  if (speed <= speedLimit) {
+    return "Ok";
+  } else {
+    // Calculate demerit points
+    const demeritPoints = Math.floor((speed - speedLimit) / kmPerDemerit);
+
+    // Check if the license should be suspended
+    if (demeritPoints > 12) {
+      return "License suspended";
     }
+
+    return "Points: " + demeritPoints;
   }
-  
-  const userSpeed = prompt('Enter car speed:');
-  const totalDemeritPoints = calculateDemeritPoints(Number(userSpeed));
-  
+}
+
+// Example usage
+console.log(calculateDemeritPoints(80));

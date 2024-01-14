@@ -1,54 +1,61 @@
-const payeRates = [
-    { lowerLimit: 0, upperLimit: 24000, rate: 10 },
-    { lowerLimit: 24001, upperLimit: 32333, rate: 25 },
-    { lowerLimit: 32334, upperLimit: 500000, rate: 30 },
-    { lowerLimit: 500001, upperLimit: 800000, rate: 32.5 },
-    { lowerLimit: 800001, upperLimit: Infinity, rate: 35 },
+// This function calculates the net salary based on the provided inputs.
+
+function calculateNetSalary(basicSalary, benefits) {
+  // Constants for tax rates
+  const taxRates = [
+    { min: 0, max: 24000, rate: 0.1 },
+    { min: 24001, max: 32333, rate: 0.25 },
+    { min: 32334, max: 500000, rate: 0.3 },
+    { min: 500001, max: 800000, rate: 0.325 },
+    { min: 800001, max: Infinity, rate: 0.35 },
   ];
-  
-  function calculatePaye(grossSalary) {
-    let taxAmount = 0;
-  
-    for (const rate of payeRates) {
-      if (grossSalary > rate.upperLimit) {
-        taxAmount += (rate.upperLimit - rate.lowerLimit + 1) * (rate.rate / 100);
-      } else {
-        taxAmount += (grossSalary - rate.lowerLimit + 1) * (rate.rate / 100);
-        break;
-      }
+
+  // Calculate tax based on the basic salary
+  let tax = 0;
+  for (const rate of taxRates) {
+    if (basicSalary > rate.min) {
+      const taxableAmount = Math.min(basicSalary, rate.max) - rate.min;
+      tax += taxableAmount * rate.rate;
     }
-  
-    return taxAmount;
   }
-  
-  function calculateNetSalary(basicSalary, benefits) {
-    const nhifDeductions = 0;  
-    const nssfDeductions = basicSalary * 0.06; 
-  
-    const grossSalary = basicSalary + benefits;
-  
-    const paye = calculatePaye(grossSalary);
-  
-    // Calculate net salary
-    const netSalary = grossSalary - paye - nhifDeductions - nssfDeductions;
-  
-    return {
-      grossSalary,
-      paye,
-      nhifDeductions,
-      nssfDeductions,
-      netSalary,
-    };
-  }
-  
-  const userBasicSalary = 30000;
-  const userBenefits = 5000;
-  const result = calculateNetSalary(userBasicSalary, userBenefits);
-  
-  console.log('Salary Details:');
-  console.log(`Gross Salary: ${result.grossSalary}`);
-  console.log(`PAYE (Tax): ${result.paye}`);
-  console.log(`NHIF Deductions: ${result.nhifDeductions}`);
-  console.log(`NSSF Deductions: ${result.nssfDeductions}`);
-  console.log(`Net Salary: ${result.netSalary}`);
-  
+
+  // Other deductions and calculations
+  const nhif = calculateNHIF(basicSalary);
+  const nssf = calculateNSSF(basicSalary);
+  const grossSalary = basicSalary + benefits;
+  const netSalary = grossSalary - tax - nhif - nssf;
+
+  return {
+    Tax: tax.toFixed(2),
+    NHIF: nhif.toFixed(2),
+    NSSF: nssf.toFixed(2),
+    GrossSalary: grossSalary.toFixed(2),
+    NetSalary: netSalary.toFixed(2),
+  };
+}
+
+// Helper function to calculate NHIF deduction
+function calculateNHIF(grossPay) {
+  // NHIF rates
+  const nhifRates = [
+    { min: 0, max: 5999, deduction: 150 },
+    // Add other rate ranges...
+  ];
+
+  // Find the applicable rate
+  const applicableRate = nhifRates.find((rate) => grossPay >= rate.min && grossPay <= rate.max);
+
+  return applicableRate ? applicableRate.deduction : 0;
+}
+
+// Helper function to calculate NSSF deduction
+function calculateNSSF(grossPay) {
+  // NSSF rates
+  const nssfRate = 0.06; // Employee and employer each contribute 6%
+
+  // Calculate NSSF deduction
+  return grossPay * nssfRate;
+}
+
+// Example usage
+console.log(calculateNetSalary(60000, 10000));
