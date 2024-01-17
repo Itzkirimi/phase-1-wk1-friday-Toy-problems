@@ -30,6 +30,9 @@ console.log(calculateDemeritPoints(80));
 Description:
 Write a program to calculate an individual’s Net Salary by getting inputs of basic salary and benefits. Calculate tax, NHIF Deductions, NSSF Deductions, gross salary, and net salary.
 
+# Author
+Hansel Kirimi
+
 Usage:
 
 javascript
