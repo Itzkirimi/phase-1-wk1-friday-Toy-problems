@@ -32,14 +32,3 @@ Write a program to calculate an individual’s Net Salary by getting inputs of b
 
 # Author
 Hansel Kirimi
-
-Usage:
-
-javascript
-Copy code
-// Example usage
-console.log(calculateNetSalary(60000, 10000));
-Repository Structure
-Each challenge has its own folder.
-The index.js file in each folder contains the solution for that challenge.
-Followed the best practices of writing clean and well-commented code
